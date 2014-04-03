@@ -49,13 +49,13 @@
 
             $pages = $this->total_entries / $this->entries_per_page;
             if ($pages == intval($pages) ) {
-                $this->last_page=$pages;
+                $this->last_page = $pages;
             } else {
-                $this->last_page =$pages +1;
+                $this->last_page = $pages +1;
             }
 
             if ( $this->last_page < 1 ) {
-                $this->last_page =1;
+                $this->last_page = 1;
             }
             return $this->last_page;
         }
@@ -88,12 +88,21 @@
 
         public function previous_page() {
             if ( $this->current_page > 1) {
-                return $self->current_page - 1;
+                return $this->current_page - 1;
             } else {
                 return undef;
             }
         }
 
+        public function next_page() {
+            if ( $this->current_page > 1
+                && $this->current_page < $this->last_page()
+            ) {
+                return $this->current_page + 1;
+            } else {
+                return undef;
+            }
+        }
 
     }
 
@@ -101,6 +110,19 @@
 
 <?
 $obj = new DataPageset(100,10,4,0,'slide');
-echo $obj->previous_page();
-echo $obj->enteries_on_this_page();
+echo "test1\n";
+echo "current page :" . $obj->current_page . "\n";
+echo "previous_page : ". $obj->previous_page() . "\n";
+echo "last_page : ". $obj->last_page() . "\n";
+echo "next_page : ". $obj->next_page() . "\n";
+echo "enteries_on_this_page : ". $obj->enteries_on_this_page() . "\n";
+
+$obj->current_page = 5;
+echo "test1\n";
+echo "current page :" . $obj->current_page . "\n";
+echo "previous_page : ". $obj->previous_page() . "\n";
+echo "last_page : ". $obj->last_page() . "\n";
+echo "next_page : ". $obj->next_page() . "\n";
+echo "enteries_on_this_page : ". $obj->enteries_on_this_page() . "\n";
+
 ?>
