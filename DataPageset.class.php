@@ -26,9 +26,6 @@
         }
 
         public function current_page() {
-            // $this->total_entries;
-            // $this->entries_per_page;
-            //  current_page
             if (empty($this->total_entries) ||
                  empty($this->entries_per_page) || empty($this->current_page)
             ) {
@@ -102,6 +99,18 @@
             } else {
                 return undef;
             }
+        }
+
+        public function previous_set() {
+
+        }
+
+        public function next_set(){
+
+        }
+
+        public function pages_in_set(){
+
         }
 
     }
