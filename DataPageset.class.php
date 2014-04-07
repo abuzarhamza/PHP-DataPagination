@@ -125,15 +125,20 @@
 
             if ( $max_pages_per_set < 1 ) {
                 # Only have one page in the set, must be page 1
-                // $this->page_set_previous = [];
-                // $this->page_set_pages = [];
-                // $this->page_set_next = [];
+                if ( $this->current_page != 1 ) {
+                    $this->page_set_previous = $this->current_page - 1 ;
+                }
+                $this->page_set_pages = [1];
+                if ( $this->current_page < $this->last_page() ) {
+                    $this->page_set_next = $this->current_page() + 1
+                }
             }
             else {
+
                 if ( $this->mode == 'slide' ) {
                     if ($max_pages_per_set > $this->last_page() ) {
                          # No sliding, no next/prev pageset
-                         $self->page_set_pages = range(1, $this->last_page());
+                         $this->page_set_pages = range(1, $this->last_page());
                     }
                     else {
                         # Find the middle rounding down - we want more pages after, than before
