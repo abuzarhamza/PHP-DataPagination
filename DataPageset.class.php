@@ -154,7 +154,7 @@
                         }
 
                         $end_page = $starting_page + $max_pages_per_set - 1;
-                        if ( $end_page < $this->last_page() ) {
+                        if ( $end_page > $this->last_page() ) {
                             $end_page = $this->last_page();
                         }
 
@@ -207,7 +207,7 @@ echo "last_page : ". $obj->last_page() . "\n";
 echo "next_page : ". $obj->next_page() . "\n";
 echo "enteries_on_this_page : ". $obj->enteries_on_this_page() . "\n";
 
-$obj->current_page = 12;
+$obj->current_page = 21;
 echo "test1\n";
 echo "current page :" . $obj->current_page . "\n";
 echo "previous_page : ". $obj->previous_page() . "\n";
