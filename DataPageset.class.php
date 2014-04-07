@@ -102,14 +102,95 @@
         }
 
         public function previous_set() {
+            if ( isset($this->page_set_previous) ) {
+                return $this->page_set_previous;
+            }
 
+            return undef;
         }
 
         public function next_set(){
+            if ( isset($this->page_set_next) ) {
+                return $this->page_set_next;
+            }
 
+            return undef;
         }
 
         public function pages_in_set(){
+            if (empty($this->pages_per_set))  {
+                return undef;
+            }
+            $max_pages_per_set = $this->pages_per_set;
+
+            if ( $max_pages_per_set < 1 ) {
+                # Only have one page in the set, must be page 1
+                // $this->page_set_previous = [];
+                // $this->page_set_pages = [];
+                // $this->page_set_next = [];
+            }
+            else {
+                if ( $this->mode == 'slide' ) {
+                    if ($max_pages_per_set > $this->last_page() ) {
+                         # No sliding, no next/prev pageset
+                         $self->page_set_pages = range(1, $this->last_page());
+                    }
+                    else {
+                        # Find the middle rounding down - we want more pages after, than before
+                        $middle = intval($max_pages_per_set/2);
+
+                        # offset for extra value right of center on even numbered sets
+                        $offset =1;
+
+                        if ( $max_pages_per_set %2 != 0 ) {
+                            # must have been an odd number, add one
+                            $middle++;
+                            $offset = 0;
+                        }
+
+                        $starting_page = $this->current_page - $middle + 1;
+                        if ( $starting_page < 1) {
+                            $starting_page =1;
+                        }
+
+                        $end_page = $starting_page + $max_pages_per_set - 1;
+                        if ( $end_page < $this->last_page() ) {
+                            $end_page = $this->last_page();
+                        }
+
+                        if ( $this->current_page <= $middle ) {
+                            #near the start of the page numbers
+                            $this->page_set_next
+                                = $max_pages_per_set + $middle - $offset;
+                            $this->page_set_pages = range (1,$max_pages_per_set);
+
+                        }
+                        elseif ( $this->current_page >
+                            ($this->last_page() - $middle - $offset)
+                        ) {
+                            # near the end of the page numbers
+                            $this->page_set_previous
+                                = $this->last_page()
+                                - $max_pages_per_set
+                                - $middle + 1;
+                            $this->page_set_pages
+                                = range( ( $this->last_page() - $max_pages_per_set + 1 ) ,
+                                         $this->last_page() ) ;
+                        }
+                        else {
+                            # Start scrolling baby!
+                            $this->page_set_pages = range($starting_page , $end_page );
+                            $this->page_set_previous
+                                = $starting_page - $middle - $offset;
+                            if ( $this->page_set_previous < 1 ) {
+                                $this->page_set_previous = 1;
+                            }
+
+                            $this->page_set_next = $end_page + $middle;
+                        }
+                    }
+                }
+            }
 
         }
 
@@ -118,7 +199,7 @@
 ?>
 
 <?
-$obj = new DataPageset(100,10,4,0,'slide');
+$obj = new DataPageset(500,10,4,5,'slide');
 echo "test1\n";
 echo "current page :" . $obj->current_page . "\n";
 echo "previous_page : ". $obj->previous_page() . "\n";
@@ -126,12 +207,16 @@ echo "last_page : ". $obj->last_page() . "\n";
 echo "next_page : ". $obj->next_page() . "\n";
 echo "enteries_on_this_page : ". $obj->enteries_on_this_page() . "\n";
 
-$obj->current_page = 5;
+$obj->current_page = 12;
 echo "test1\n";
 echo "current page :" . $obj->current_page . "\n";
 echo "previous_page : ". $obj->previous_page() . "\n";
 echo "last_page : ". $obj->last_page() . "\n";
 echo "next_page : ". $obj->next_page() . "\n";
 echo "enteries_on_this_page : ". $obj->enteries_on_this_page() . "\n";
+$obj->pages_in_set();
 
+foreach ($obj->page_set_pages as $v) {
+    echo "$v\n";
+}
 ?>
