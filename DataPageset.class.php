@@ -117,7 +117,8 @@
             return undef;
         }
 
-        public function pages_in_set(){
+        public function pages_in_set() {
+
             if (empty($this->pages_per_set))  {
                 return undef;
             }
@@ -128,9 +129,9 @@
                 if ( $this->current_page != 1 ) {
                     $this->page_set_previous = $this->current_page - 1 ;
                 }
-                $this->page_set_pages = [1];
+                $this->page_set_pages[0] = 1;
                 if ( $this->current_page < $this->last_page() ) {
-                    $this->page_set_next = $this->current_page() + 1
+                    $this->page_set_next = $this->current_page() + 1;
                 }
             }
             else {
@@ -180,7 +181,8 @@
                                 - $middle + 1;
                             $this->page_set_pages
                                 = range( ( $this->last_page() - $max_pages_per_set + 1 ) ,
-                                         $this->last_page() ) ;
+                                         $this->last_page()
+                                        ) ;
                         }
                         else {
                             # Start scrolling baby!
@@ -195,33 +197,64 @@
                         }
                     }
                 }
-            }
+                elseif ( $this->mode == 'fixed' ) {
+                    $starting_page = $this->_calc_start_page($max_pages_per_set);
+                    $end_page      = $starting_page + $max_pages_per_set - 1;
 
+                    if ( $end_page < $this->last_page() ) {
+                        $this->page_set_next = $end_page + 1;
+                    }
+
+                    if ( $starting_page > 1 ) {
+                        $this->page_set_previous
+                            = $starting_page - $max_pages_per_set;
+                    }
+                }
+
+            }
         }
 
-    }
+        private function _calc_start_page($max_pages_per_set) {
 
+            $current_page = $self->current_page;
+            $start_page = 1;
+
+            $current_page_set = 0;
+
+            if ( $max_pages_per_set > 0 ) {
+                $current_page_set = intval( $current_page / $max_pages_per_set );
+
+                if ( $current_page % $max_pages_per_set == 0 ) {
+                    $current_page_set = $current_page_set - 1;
+                }
+            }
+
+            $start_page = ( $current_page_set * $max_pages_per_set ) + 1;
+
+            return $start_page;
+        }
+    }
 ?>
 
 <?
-$obj = new DataPageset(500,10,4,5,'slide');
-echo "test1\n";
-echo "current page :" . $obj->current_page . "\n";
-echo "previous_page : ". $obj->previous_page() . "\n";
-echo "last_page : ". $obj->last_page() . "\n";
-echo "next_page : ". $obj->next_page() . "\n";
-echo "enteries_on_this_page : ". $obj->enteries_on_this_page() . "\n";
+    $obj = new DataPageset(500,10,4,5,'slide');
+    echo "test1\n";
+    echo "current page :" . $obj->current_page . "\n";
+    echo "previous_page : ". $obj->previous_page() . "\n";
+    echo "last_page : ". $obj->last_page() . "\n";
+    echo "next_page : ". $obj->next_page() . "\n";
+    echo "enteries_on_this_page : ". $obj->enteries_on_this_page() . "\n";
 
-$obj->current_page = 21;
-echo "test1\n";
-echo "current page :" . $obj->current_page . "\n";
-echo "previous_page : ". $obj->previous_page() . "\n";
-echo "last_page : ". $obj->last_page() . "\n";
-echo "next_page : ". $obj->next_page() . "\n";
-echo "enteries_on_this_page : ". $obj->enteries_on_this_page() . "\n";
-$obj->pages_in_set();
+    $obj->current_page = 26;
+    echo "test1\n";
+    echo "current page :" . $obj->current_page . "\n";
+    echo "previous_page : ". $obj->previous_page() . "\n";
+    echo "last_page : ". $obj->last_page() . "\n";
+    echo "next_page : ". $obj->next_page() . "\n";
+    echo "enteries_on_this_page : ". $obj->enteries_on_this_page() . "\n";
+    $obj->pages_in_set();
 
-foreach ($obj->page_set_pages as $v) {
-    echo "$v\n";
-}
+    foreach ($obj->page_set_pages as $v) {
+        echo "$v\n";
+    }
 ?>
