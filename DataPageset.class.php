@@ -236,3 +236,29 @@
         }
     }
 ?>
+
+<?
+/*
+**********SAMPLE USAGE *************
+$obj = new DataPageset(500,10,4,5,'slide');
+echo "test1\n";
+echo "current page :" . $obj->current_page . "\n";
+echo "previous_page : ". $obj->previous_page() . "\n";
+echo "last_page : ". $obj->last_page() . "\n";
+echo "next_page : ". $obj->next_page() . "\n";
+echo "enteries_on_this_page : ". $obj->enteries_on_this_page() . "\n";
+
+$obj->current_page = 26;
+echo "test1\n";
+echo "current page :" . $obj->current_page . "\n";
+echo "previous_page : ". $obj->previous_page() . "\n";
+echo "last_page : ". $obj->last_page() . "\n";
+echo "next_page : ". $obj->next_page() . "\n";
+echo "enteries_on_this_page : ". $obj->enteries_on_this_page() . "\n";
+$obj->pages_in_set();
+
+foreach ($obj->page_set_pages as $v) {
+    echo "$v\n";
+}
+*/
+?>
