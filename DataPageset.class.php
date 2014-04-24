@@ -49,7 +49,7 @@
             if ($pages == intval($pages) ) {
                 $this->last_page = $pages;
             } else {
-                $this->last_page = $pages +1;
+                $this->last_page = intval($pages) +1;
             }
 
             if ( $this->last_page < 1 ) {
